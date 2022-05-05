@@ -32,7 +32,7 @@ struct Urls: Codable {
 }
 
 struct SearchPhoto: Codable {
-    
+    let results: [Photo]
 }
 
 class RealmPhoto {
