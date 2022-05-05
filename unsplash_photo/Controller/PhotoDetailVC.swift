@@ -50,11 +50,19 @@ class PhotoDetailVC: UIViewController {
         numLikesLabel.text = "\(photo.likes) Likes"
         createdLabel.text = parseDate(photo.createdAt)
         locationLabel.text = photo.user.location
+        setBtnDefault()
         
-        if checkFav() {
-            addToFavBtn.layer.backgroundColor = UIColor.blue.cgColor
-            addToFavBtn.tintColor = .white
-        }
+        if checkFav() { setBtnAdded() }
+    }
+    
+    private func setBtnAdded() {
+        addToFavBtn.layer.backgroundColor = UIColor.blue.cgColor
+        addToFavBtn.tintColor = .white
+    }
+    
+    private func setBtnDefault() {
+        addToFavBtn.layer.backgroundColor = UIColor.white.cgColor
+        addToFavBtn.tintColor = .blue
     }
     
     private func parseDate(_ createdDate: String) -> String {
@@ -67,13 +75,17 @@ class PhotoDetailVC: UIViewController {
     }
     
     private func checkFav() -> Bool {
+        addedFav = false
+        print(addedFav)
         if let favPhotos = Persistance.shared.realmRead(),
             let photo = photo {
             for fvPh in favPhotos where fvPh.id == photo.id {
+                print("heyhey")
                 addedFav = true
                 break
             }
         }
+        print(addedFav)
         return addedFav
     }
     
@@ -83,13 +95,11 @@ class PhotoDetailVC: UIViewController {
         if addedFav {
             deleteRealmPhoto(photo)
             addedFav = false
-            addToFavBtn.layer.backgroundColor = UIColor.white.cgColor
-            addToFavBtn.tintColor = .blue
+            setBtnDefault()
         } else {
             createRealmPhoto(photo)
             addedFav = true
-            addToFavBtn.layer.backgroundColor = UIColor.blue.cgColor
-            addToFavBtn.tintColor = .white
+            setBtnAdded()
         }
     }
     
@@ -113,6 +123,10 @@ class PhotoDetailVC: UIViewController {
                 break
             }
         }
+    }
+    
+    private func showAlert(_ message: String) {
+        let alert = UIAlertController(title: "Attention", message: <#T##String?#>, preferredStyle: <#T##UIAlertController.Style#>)
     }
 }
 

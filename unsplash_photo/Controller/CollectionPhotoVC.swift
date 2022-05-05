@@ -29,22 +29,28 @@ class CollectionPhotoVC: UIViewController, UITextFieldDelegate {
     
     @IBAction func searchPhotoBtnTapped(_ sender: Any) {
         let searchWord = searchPhotoTextField.text ?? ""
-        searchRequestLabel.text = "Photos for request: \(searchWord)"
-        searchRequestLabel.isHidden = false
         
-        apiClient.getSearchPhoto(searchWord) { result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let photo):
-                    self.photosArr = photo.results
-                case .failure:
-                    self.photosArr = []
-                    self.errorLabel.isHidden = false
+        if searchWord != "" {
+            searchRequestLabel.text = "Photos for request: \(searchWord)"
+            searchRequestLabel.isHidden = false
+            
+            apiClient.getSearchPhoto(searchWord) { result in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success(let photo):
+                        self.photosArr = photo.results
+                    case .failure:
+                        self.photosArr = []
+                        self.errorLabel.isHidden = false
+                    }
+                    self.photoCV.reloadData()
                 }
-                self.photoCV.reloadData()
             }
+            view.endEditing(true)
+        } else {
+            loadData()
+            searchRequestLabel.isHidden = true
         }
-        view.endEditing(true)
     }
     
     private func loadData() {
