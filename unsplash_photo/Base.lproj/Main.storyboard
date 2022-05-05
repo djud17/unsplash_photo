@@ -312,7 +312,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="j5j-Hn-7Gw">
-                                <rect key="frame" x="10" y="175.5" width="394" height="617.5"/>
+                                <rect key="frame" x="10" y="108" width="394" height="685"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="5" minimumInteritemSpacing="5" id="XGw-0D-P3c">
                                     <size key="itemSize" width="128" height="160"/>
@@ -364,21 +364,12 @@
                                     <outlet property="delegate" destination="Onr-Mz-tlI" id="i8f-BJ-M2w"/>
                                 </connections>
                             </collectionView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Favorite photos:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LWT-ie-U5S">
-                                <rect key="frame" x="20" y="128" width="374" height="27.5"/>
-                                <fontDescription key="fontDescription" name="AvenirNextCondensed-Bold" family="Avenir Next Condensed" pointSize="20"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6uA-Ov-wVH"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="6uA-Ov-wVH" firstAttribute="bottom" secondItem="j5j-Hn-7Gw" secondAttribute="bottom" constant="20" id="4XC-LD-N4s"/>
-                            <constraint firstItem="LWT-ie-U5S" firstAttribute="top" secondItem="6uA-Ov-wVH" secondAttribute="top" constant="40" id="5Xx-zs-nQ2"/>
-                            <constraint firstItem="j5j-Hn-7Gw" firstAttribute="top" secondItem="LWT-ie-U5S" secondAttribute="bottom" constant="20" id="GZf-xr-cjr"/>
-                            <constraint firstItem="LWT-ie-U5S" firstAttribute="leading" secondItem="6uA-Ov-wVH" secondAttribute="leading" constant="20" id="ZIB-53-l0m"/>
-                            <constraint firstItem="6uA-Ov-wVH" firstAttribute="trailing" secondItem="LWT-ie-U5S" secondAttribute="trailing" constant="20" id="hEv-L6-ES5"/>
+                            <constraint firstItem="j5j-Hn-7Gw" firstAttribute="top" secondItem="6uA-Ov-wVH" secondAttribute="top" constant="20" id="XhX-Cx-DoF"/>
                             <constraint firstItem="6uA-Ov-wVH" firstAttribute="trailing" secondItem="j5j-Hn-7Gw" secondAttribute="trailing" constant="10" id="icn-38-luv"/>
                             <constraint firstItem="j5j-Hn-7Gw" firstAttribute="leading" secondItem="6uA-Ov-wVH" secondAttribute="leading" constant="10" id="pqk-7A-mms"/>
                         </constraints>

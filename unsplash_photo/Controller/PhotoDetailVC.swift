@@ -76,16 +76,13 @@ class PhotoDetailVC: UIViewController {
     
     private func checkFav() -> Bool {
         addedFav = false
-        print(addedFav)
         if let favPhotos = Persistance.shared.realmRead(),
             let photo = photo {
             for fvPh in favPhotos where fvPh.id == photo.id {
-                print("heyhey")
                 addedFav = true
                 break
             }
         }
-        print(addedFav)
         return addedFav
     }
     
@@ -96,10 +93,12 @@ class PhotoDetailVC: UIViewController {
             deleteRealmPhoto(photo)
             addedFav = false
             setBtnDefault()
+            showAlert("deleted from")
         } else {
             createRealmPhoto(photo)
             addedFav = true
             setBtnAdded()
+            showAlert("added to")
         }
     }
     
@@ -126,7 +125,11 @@ class PhotoDetailVC: UIViewController {
     }
     
     private func showAlert(_ message: String) {
-        let alert = UIAlertController(title: "Attention", message: <#T##String?#>, preferredStyle: <#T##UIAlertController.Style#>)
+        let alert = UIAlertController(title: "Attention", message: "This photo was  \(message) Favorites.", preferredStyle: .alert)
+        let okBtn = UIAlertAction(title: "OK", style: .default)
+        alert.addAction(okBtn)
+        
+        present(alert, animated: true)
     }
 }
 
