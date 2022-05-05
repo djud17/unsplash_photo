@@ -10,6 +10,8 @@ import UIKit
 class FavoritePhotoVC: UIViewController {
     @IBOutlet weak var favoritePhotosCV: UICollectionView!
     
+    var favoritePhotos: [FavoritePhoto] = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 

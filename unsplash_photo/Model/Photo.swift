@@ -5,6 +5,7 @@
 //  Created by Давид Тоноян  on 05.05.2022.
 //
 
+import RealmSwift
 
 // MARK: Random photo struct
 struct Photo: Codable {
@@ -35,6 +36,12 @@ struct SearchPhoto: Codable {
     let results: [Photo]
 }
 
-class RealmPhoto {
-    
+class FavoritePhoto: Object {
+    @objc dynamic var id: String = ""
+    @objc dynamic var createdAt: String = ""
+    @objc dynamic var smallUrl: String = ""
+    @objc dynamic var regularUrl: String = ""
+    @objc dynamic var likes: Int = 0
+    @objc dynamic var username: String = ""
+    @objc dynamic var location: String = ""
 }

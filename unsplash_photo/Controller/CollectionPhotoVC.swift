@@ -39,6 +39,7 @@ class CollectionPhotoVC: UIViewController, UITextFieldDelegate {
                     self.photosArr = photo.results
                 case .failure:
                     self.photosArr = []
+                    self.errorLabel.isHidden = false
                 }
                 self.photoCV.reloadData()
             }

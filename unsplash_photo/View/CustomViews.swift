@@ -22,6 +22,7 @@ class FavoritesBtn: UIButton {
         layer.borderColor = UIColor.blue.cgColor
         layer.borderWidth = 1.0
         layer.backgroundColor = UIColor.white.cgColor
+        tintColor = .blue
     }
 }
 

@@ -28,7 +28,7 @@ class ApiClientImpl: ApiClient {
     
     // Parameters for search photo request
     private let searchPhotoUrl = "search/photos/"
-    private let searchRequest = "&query=fruits"
+    private let searchRequest = "&query="
     
     func getRandomPhoto(completion: @escaping (Result<[Photo], Error>) -> Void) {
         let apiUrl = URL(string: "\(unsplashUrl)\(randomPhotoUrl)\(accessKey)\(photoCounter)")!
