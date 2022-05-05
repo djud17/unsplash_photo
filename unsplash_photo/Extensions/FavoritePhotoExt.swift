@@ -7,18 +7,18 @@
 
 import Kingfisher
 
-extension FavoritePhotoVC: UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+extension FavoritePhotoVC: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return favoritePhotos.count
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "photoCell", for: indexPath) as! CustomCV
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "favoriteCell", for: indexPath) as! CustomCell
         let model = favoritePhotos[indexPath.row]
         let photoUrl = URL(string: model.smallUrl)
         
         let processor = DownsamplingImageProcessor(size: cell.photoImageView.bounds.size)
-                     |> RoundCornerImageProcessor(cornerRadius: 20)
+                     |> RoundCornerImageProcessor(cornerRadius: 10)
         cell.photoImageView.kf.indicatorType = .activity
         cell.photoImageView.kf.setImage(
             with: photoUrl,
@@ -28,14 +28,14 @@ extension FavoritePhotoVC: UICollectionViewDataSource {
                 .transition(.fade(1)),
                 .cacheOriginalImage
             ])
-        cell.userLabel.text = model.username
+        cell.usernameLabel.text = model.username
         
         return cell
     }
 }
 
-extension FavoritePhotoVC: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+extension FavoritePhotoVC: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let storyboard = UIStoryboard(name: "Main", bundle: .main)
         let viewController = storyboard.instantiateViewController(identifier: "photoDetailVC") as! PhotoDetailVC
         
@@ -50,7 +50,6 @@ extension FavoritePhotoVC: UICollectionViewDelegate {
         viewController.photo = photo
         
         navigationController?.pushViewController(viewController, animated: true)
-        collectionView.deselectItem(at: indexPath, animated: true)
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 }
-

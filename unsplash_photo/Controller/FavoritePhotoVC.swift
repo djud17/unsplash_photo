@@ -8,7 +8,7 @@
 import UIKit
 
 class FavoritePhotoVC: UIViewController {
-    @IBOutlet weak var favoritePhotosCV: UICollectionView!
+    @IBOutlet weak var favoritesTableView: UITableView!
     
     var favoritePhotos: [FavoritePhoto] = []
     
@@ -28,7 +28,7 @@ class FavoritePhotoVC: UIViewController {
             favoritePhotos.removeAll()
             fvPhoto.forEach {favoritePhotos.append($0)}
             
-            favoritePhotosCV.reloadData()
+            favoritesTableView.reloadData()
         }
     }
 }

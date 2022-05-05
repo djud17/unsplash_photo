@@ -18,7 +18,7 @@ extension CollectionPhotoVC: UICollectionViewDataSource {
         let photoUrl = URL(string: model.urls.small)
         
         let processor = DownsamplingImageProcessor(size: cell.photoImageView.bounds.size)
-                     |> RoundCornerImageProcessor(cornerRadius: 20)
+                     |> RoundCornerImageProcessor(cornerRadius: 10)
         cell.photoImageView.kf.indicatorType = .activity
         cell.photoImageView.kf.setImage(
             with: photoUrl,

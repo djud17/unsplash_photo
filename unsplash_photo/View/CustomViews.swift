@@ -12,6 +12,11 @@ class CustomCV: UICollectionViewCell {
     @IBOutlet weak var userLabel: UILabel!
 }
 
+class CustomCell: UITableViewCell {
+    @IBOutlet weak var usernameLabel: UILabel!
+    @IBOutlet weak var photoImageView: UIImageView!
+}
+
 class FavoritesBtn: UIButton {
     override func awakeFromNib() {
         super.awakeFromNib()
