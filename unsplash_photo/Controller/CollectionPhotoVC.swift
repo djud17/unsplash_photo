@@ -46,11 +46,11 @@ class CollectionPhotoVC: UIViewController, UITextFieldDelegate {
                     self.photoCV.reloadData()
                 }
             }
-            view.endEditing(true)
         } else {
             loadData()
             searchRequestLabel.isHidden = true
         }
+        view.endEditing(true)
     }
     
     private func loadData() {

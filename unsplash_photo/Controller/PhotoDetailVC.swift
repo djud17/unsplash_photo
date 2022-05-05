@@ -38,7 +38,7 @@ class PhotoDetailVC: UIViewController {
             deleteRealmPhoto(photo)
             addedFav = false
             setBtnDefault()
-            showAlert("deleted from")
+            showAlert("removed from")
         } else {
             createRealmPhoto(photo)
             addedFav = true
@@ -137,4 +137,3 @@ class PhotoDetailVC: UIViewController {
         present(alert, animated: true)
     }
 }
-
