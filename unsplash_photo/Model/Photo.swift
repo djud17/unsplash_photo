@@ -7,7 +7,7 @@
 
 import RealmSwift
 
-// MARK: Random photo struct
+// MARK: Photo struct
 struct Photo: Codable {
     let id: String
     let createdAt: String
@@ -21,21 +21,21 @@ struct Photo: Codable {
     }
 }
 
-// MARK: - User
 struct User: Codable {
     let username: String
     let location: String?
 }
 
-// MARK: - Urls
 struct Urls: Codable {
     let regular, small: String
 }
 
+// MARK: Photo struct for search
 struct SearchPhoto: Codable {
     let results: [Photo]
 }
 
+// MARK: Favorite Photo class for Realm
 class FavoritePhoto: Object {
     @objc dynamic var id: String = ""
     @objc dynamic var createdAt: String = ""

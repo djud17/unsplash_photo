@@ -17,7 +17,7 @@ class PhotoDetailVC: UIViewController {
     @IBOutlet weak var addToFavBtn: FavoritesBtn!
     
     var photo: Photo?
-    var favPhotos: [FavoritePhoto] = []
+    private var favPhotos: [FavoritePhoto] = []
     private var addedFav = false
     
     override func viewDidLoad() {
@@ -26,8 +26,25 @@ class PhotoDetailVC: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         guard let photo = photo else { return }
+        
         loadImage(photo)
         setPhotoData(photo)
+    }
+    
+    @IBAction func addToFavBtnTapped(_ sender: Any) {
+        guard let photo = photo else { return }
+        
+        if addedFav {
+            deleteRealmPhoto(photo)
+            addedFav = false
+            setBtnDefault()
+            showAlert("deleted from")
+        } else {
+            createRealmPhoto(photo)
+            addedFav = true
+            setBtnAdded()
+            showAlert("added to")
+        }
     }
     
     private func loadImage(_ photo: Photo) {
@@ -50,9 +67,12 @@ class PhotoDetailVC: UIViewController {
         numLikesLabel.text = "\(photo.likes) Likes"
         createdLabel.text = parseDate(photo.createdAt)
         locationLabel.text = photo.user.location
-        setBtnDefault()
         
-        if checkFav() { setBtnAdded() }
+        if checkFav() {
+            setBtnAdded()
+        } else {
+            setBtnDefault()
+        }
     }
     
     private func setBtnAdded() {
@@ -74,6 +94,7 @@ class PhotoDetailVC: UIViewController {
         return "\(components.day ?? 0)-\(components.month ?? 0)-\(components.year ?? 0)"
     }
     
+    // Check Photo in Favorites
     private func checkFav() -> Bool {
         addedFav = false
         if let favPhotos = Persistance.shared.realmRead(),
@@ -84,22 +105,6 @@ class PhotoDetailVC: UIViewController {
             }
         }
         return addedFav
-    }
-    
-    @IBAction func addToFavBtnTapped(_ sender: Any) {
-        guard let photo = photo else { return }
-        
-        if addedFav {
-            deleteRealmPhoto(photo)
-            addedFav = false
-            setBtnDefault()
-            showAlert("deleted from")
-        } else {
-            createRealmPhoto(photo)
-            addedFav = true
-            setBtnAdded()
-            showAlert("added to")
-        }
     }
     
     private func createRealmPhoto(_ photo: Photo) {

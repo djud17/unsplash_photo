@@ -15,6 +15,7 @@ class CustomCV: UICollectionViewCell {
 class FavoritesBtn: UIButton {
     override func awakeFromNib() {
         super.awakeFromNib()
+        
         setupBtn()
     }
     
@@ -29,6 +30,7 @@ class FavoritesBtn: UIButton {
 class SearchBtn: UIButton {
     override func awakeFromNib() {
         super.awakeFromNib()
+        
         setupBtn()
     }
     

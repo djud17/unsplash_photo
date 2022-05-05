@@ -5,7 +5,6 @@
 //  Created by Давид Тоноян  on 05.05.2022.
 //
 
-import UIKit
 import Kingfisher
 
 extension FavoritePhotoVC: UICollectionViewDataSource {
