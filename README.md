@@ -24,5 +24,5 @@ You can:
 ![alt text](Screenshots/4.png "Add photo to Favorites (Main)")
 ### Favorites photos (Second tab)
 ![alt text](Screenshots/5.png "Favorites (Second tab)")
-### Removing photo to Favorites
+### Removing photo from Favorites
 ![alt text](Screenshots/6.png "Remove photo from Favorites")
