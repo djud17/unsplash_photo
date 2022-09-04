@@ -7,7 +7,7 @@
 
 import RealmSwift
 
-class Persistance {
+final class Persistance {
     static let shared = Persistance()
     let realm = try! Realm()
     

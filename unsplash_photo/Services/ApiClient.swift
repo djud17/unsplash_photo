@@ -17,7 +17,7 @@ protocol ApiClient {
     func getSearchPhoto(_ searchWord: String, completion: @escaping (Result<SearchPhoto, Error>) -> Void)
 }
 
-class ApiClientImpl: ApiClient {
+final class ApiClientImpl: ApiClient {
     // Parameters for request
     private let unsplashUrl = "https://api.unsplash.com/"
     private let accessKey = "?client_id=9etn9yyFeBTPlHH66IhXTisehts2b5rGd8Tok48XLK8"
@@ -35,11 +35,14 @@ class ApiClientImpl: ApiClient {
         
         AF.request(apiUrl).responseData { response in
             if let data = response.value {
-                let randomPhotos: [Photo] = try! JSONDecoder().decode([Photo].self, from: data)
-                if response.response?.statusCode == 200 {
-                    completion(.success(randomPhotos))
-                } else {
-                    completion(.failure(ApiError.wrongData))
+                let randomPhotos: [Photo]? = try? JSONDecoder().decode([Photo].self, from: data)
+                
+                if let randomPhotos = randomPhotos {
+                    if response.response?.statusCode == 200 {
+                        completion(.success(randomPhotos))
+                    } else {
+                        completion(.failure(ApiError.wrongData))
+                    }
                 }
             } else {
                 completion(.failure(ApiError.noData))
@@ -53,11 +56,14 @@ class ApiClientImpl: ApiClient {
         
         AF.request(apiUrl).responseData { response in
             if let data = response.value {
-                let searchPhotos: SearchPhoto = try! JSONDecoder().decode(SearchPhoto.self, from: data)
-                if response.response?.statusCode == 200 {
-                    completion(.success(searchPhotos))
-                } else {
-                    completion(.failure(ApiError.wrongData))
+                let searchPhotos: SearchPhoto? = try? JSONDecoder().decode(SearchPhoto.self, from: data)
+                
+                if let searchPhotos = searchPhotos {
+                    if response.response?.statusCode == 200 {
+                        completion(.success(searchPhotos))
+                    } else {
+                        completion(.failure(ApiError.wrongData))
+                    }
                 }
             } else {
                 completion(.failure(ApiError.noData))

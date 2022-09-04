@@ -6,21 +6,31 @@
 //
 
 import UIKit
+import Kingfisher
 
-class FavoritePhotoVC: UIViewController {
-    @IBOutlet weak var favoritesTableView: UITableView!
-    
-    var favoritePhotos: [FavoritePhoto] = []
+final class FavoritePhotoVC: UITableViewController {
+    private var favoritePhotos: [FavoritePhoto] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationItem.title = "Favorites"
-        navigationController?.navigationBar.prefersLargeTitles = true
+        setupView()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         readData()
+    }
+    
+    private func setupView() {
+        navigationItem.title = "Favorites"
+        navigationController?.navigationBar.prefersLargeTitles = true
+        
+        view.backgroundColor = .white
+        
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.register(CustomCell.self, forCellReuseIdentifier: "favoriteCell")
+        tableView.backgroundColor = .white
     }
     
     private func readData() {
@@ -28,7 +38,53 @@ class FavoritePhotoVC: UIViewController {
             favoritePhotos.removeAll()
             fvPhoto.forEach {favoritePhotos.append($0)}
             
-            favoritesTableView.reloadData()
+            tableView.reloadData()
         }
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        80
+    }
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return favoritePhotos.count
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "favoriteCell", for: indexPath) as! CustomCell
+        let model = favoritePhotos[indexPath.row]
+        let photoUrl = URL(string: model.smallUrl)
+        
+        let processor = DownsamplingImageProcessor(size: cell.photoImageView.bounds.size)
+                     |> RoundCornerImageProcessor(cornerRadius: 10)
+        cell.photoImageView.kf.indicatorType = .activity
+        cell.photoImageView.kf.setImage(
+            with: photoUrl,
+            options: [
+                .processor(processor),
+                .scaleFactor(UIScreen.main.scale),
+                .transition(.fade(1)),
+                .cacheOriginalImage
+            ])
+        cell.usernameLabel.text = model.username
+        
+        return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let viewController = PhotoDetailVC()
+        
+        let favPhoto = favoritePhotos[indexPath.row]
+        let photoUrls = Urls(regular: favPhoto.regularUrl, small: favPhoto.smallUrl)
+        let photoUser = User(username: favPhoto.username, location: favPhoto.location)
+        let photo = Photo(id: favPhoto.id,
+                          createdAt: favPhoto.createdAt,
+                          urls: photoUrls,
+                          likes: favPhoto.likes,
+                          user: photoUser)
+        viewController.photo = photo
+        
+        navigationController?.pushViewController(viewController, animated: true)
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 }

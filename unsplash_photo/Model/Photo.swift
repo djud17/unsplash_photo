@@ -36,7 +36,7 @@ struct SearchPhoto: Codable {
 }
 
 // MARK: Favorite Photo class for Realm
-class FavoritePhoto: Object {
+final class FavoritePhoto: Object {
     @objc dynamic var id: String = ""
     @objc dynamic var createdAt: String = ""
     @objc dynamic var smallUrl: String = ""

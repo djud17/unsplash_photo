@@ -36,8 +36,7 @@ extension CollectionPhotoVC: UICollectionViewDataSource {
 
 extension CollectionPhotoVC: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let storyboard = UIStoryboard(name: "Main", bundle: .main)
-        let viewController = storyboard.instantiateViewController(identifier: "photoDetailVC") as! PhotoDetailVC
+        let viewController = PhotoDetailVC()
         
         viewController.photo = photosArr[indexPath.row]
         

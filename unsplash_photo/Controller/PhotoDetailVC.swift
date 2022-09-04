@@ -8,20 +8,28 @@
 import UIKit
 import Kingfisher
 
-class PhotoDetailVC: UIViewController {
-    @IBOutlet weak var photoImageView: UIImageView!
-    @IBOutlet weak var photoUsernameLabel: UILabel!
-    @IBOutlet weak var createdLabel: UILabel!
-    @IBOutlet weak var numLikesLabel: UILabel!
-    @IBOutlet weak var locationLabel: UILabel!
-    @IBOutlet weak var addToFavBtn: FavoritesBtn!
+final class PhotoDetailVC: UIViewController {
+    private var photoImageView: UIImageView!
+    private var photoUsernameLabel: UILabel!
+    private var numLikesLabel: UILabel!
+    private var createdLabel: UILabel!
+    private var locationLabel: UILabel!
+    private var addToFavBtn: UIButton!
     
     var photo: Photo?
     private var favPhotos: [FavoritePhoto] = []
     private var addedFav = false
     
+    private lazy var margins = self.view.layoutMarginsGuide
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        view.backgroundColor = .white
+        
+        getPhotoImageView()
+        getTitleLabels()
+        createFavButton(underView: locationLabel)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -31,7 +39,7 @@ class PhotoDetailVC: UIViewController {
         setPhotoData(photo)
     }
     
-    @IBAction func addToFavBtnTapped(_ sender: Any) {
+    @objc private func addToFavBtnTapped(_ sender: UIButton) {
         guard let photo = photo else { return }
         
         if addedFav {
@@ -77,12 +85,16 @@ class PhotoDetailVC: UIViewController {
     
     private func setBtnAdded() {
         addToFavBtn.layer.backgroundColor = UIColor.blue.cgColor
-        addToFavBtn.tintColor = .white
+        addToFavBtn.setTitle("Remove from Favorites", for: .normal)
+        addToFavBtn.setTitleColor(.white, for: .normal)
+        addToFavBtn.setTitleColor(.blue, for: .highlighted)
     }
     
     private func setBtnDefault() {
         addToFavBtn.layer.backgroundColor = UIColor.white.cgColor
-        addToFavBtn.tintColor = .blue
+        addToFavBtn.setTitle("Add to Favorites", for: .normal)
+        addToFavBtn.setTitleColor(.blue, for: .normal)
+        addToFavBtn.setTitleColor(.white, for: .highlighted)
     }
     
     private func parseDate(_ createdDate: String) -> String {
@@ -135,5 +147,88 @@ class PhotoDetailVC: UIViewController {
         alert.addAction(okBtn)
         
         present(alert, animated: true)
+    }
+    
+    private func getPhotoImageView() {
+        photoImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width - 20, height: 312))
+        photoImageView.backgroundColor = .white
+        photoImageView.translatesAutoresizingMaskIntoConstraints = false
+        
+        view.addSubview(photoImageView)
+
+        NSLayoutConstraint.activate([
+            photoImageView.topAnchor.constraint(equalTo: margins.topAnchor),
+            photoImageView.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
+            photoImageView.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
+            photoImageView.heightAnchor.constraint(equalToConstant: 312)
+        ])
+    }
+    
+    private func getTitleLabels() {
+        createdLabel = createTitleLabel(withFont: .systemFont(ofSize: 16), withAlign: .left)
+        setLeftLabelConstraints(forLabel: createdLabel, underView: photoImageView)
+        
+        let userTitleLabel = createTitleLabel(withFont: .boldSystemFont(ofSize: 16), withAlign: .left)
+        setLeftLabelConstraints(forLabel: userTitleLabel, underView: createdLabel)
+        userTitleLabel.text = "User:"
+        
+        let locationTitleLabel = createTitleLabel(withFont: .boldSystemFont(ofSize: 16), withAlign: .left)
+        setLeftLabelConstraints(forLabel: locationTitleLabel, underView: userTitleLabel)
+        locationTitleLabel.text = "Location:"
+        
+        numLikesLabel = createTitleLabel(withFont: .systemFont(ofSize: 16), withAlign: .right)
+        setRightLabelConstraints(forLabel: numLikesLabel, underView: photoImageView)
+        
+        photoUsernameLabel = createTitleLabel(withFont: .systemFont(ofSize: 16), withAlign: .right)
+        setRightLabelConstraints(forLabel: photoUsernameLabel, underView: numLikesLabel)
+        
+        locationLabel = createTitleLabel(withFont: .systemFont(ofSize: 16), withAlign: .right)
+        setRightLabelConstraints(forLabel: locationLabel, underView: photoUsernameLabel)
+    }
+    
+    private func createTitleLabel(withFont font: UIFont, withAlign align: NSTextAlignment) -> UILabel {
+        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 100, height: 40))
+        label.textColor = .black
+        label.font = font
+        label.textAlignment = align
+        
+        self.view.addSubview(label)
+        
+        return label
+    }
+    
+    private func setLeftLabelConstraints(forLabel label: UILabel, underView view: UIView) {
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            label.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
+            label.topAnchor.constraint(equalTo: view.bottomAnchor, constant: 20)
+        ])
+    }
+    
+    private func setRightLabelConstraints(forLabel label: UILabel, underView view: UIView) {
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            label.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
+            label.topAnchor.constraint(equalTo: view.bottomAnchor, constant: 20)
+        ])
+    }
+
+    private func createFavButton(underView view: UIView) {
+        addToFavBtn = UIButton(frame: CGRect(x: 10, y: 10, width: 80, height: 40))
+        addToFavBtn.addTarget(self, action: #selector(addToFavBtnTapped), for: .touchUpInside)
+        addToFavBtn.layer.borderColor = UIColor.blue.cgColor
+        addToFavBtn.layer.borderWidth = 1.0
+        setBtnDefault()
+        addToFavBtn.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.view.addSubview(addToFavBtn)
+        
+        NSLayoutConstraint.activate([
+            addToFavBtn.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
+            addToFavBtn.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
+            addToFavBtn.topAnchor.constraint(equalTo: view.bottomAnchor, constant: 20)
+        ])
     }
 }
