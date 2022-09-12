@@ -24,9 +24,7 @@ final class FavoritePhotoVC: UITableViewController {
     private func setupView() {
         navigationItem.title = "Favorites"
         navigationController?.navigationBar.prefersLargeTitles = true
-        
         view.backgroundColor = .white
-        
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(CustomCell.self, forCellReuseIdentifier: "favoriteCell")
@@ -37,7 +35,6 @@ final class FavoritePhotoVC: UITableViewController {
         if let fvPhoto = Persistance.shared.realmRead() {
             favoritePhotos.removeAll()
             fvPhoto.forEach {favoritePhotos.append($0)}
-            
             tableView.reloadData()
         }
     }
@@ -47,33 +44,31 @@ final class FavoritePhotoVC: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return favoritePhotos.count
+        favoritePhotos.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "favoriteCell", for: indexPath) as! CustomCell
-        let model = favoritePhotos[indexPath.row]
-        let photoUrl = URL(string: model.smallUrl)
-        
-        let processor = DownsamplingImageProcessor(size: cell.photoImageView.bounds.size)
-                     |> RoundCornerImageProcessor(cornerRadius: 10)
-        cell.photoImageView.kf.indicatorType = .activity
-        cell.photoImageView.kf.setImage(
-            with: photoUrl,
-            options: [
-                .processor(processor),
-                .scaleFactor(UIScreen.main.scale),
-                .transition(.fade(1)),
-                .cacheOriginalImage
+        let cell = tableView.dequeueReusableCell(withIdentifier: "favoriteCell", for: indexPath)
+        if let cell = cell as? CustomCell {
+            let model = favoritePhotos[indexPath.row]
+            let photoUrl = URL(string: model.smallUrl)
+            let processor = DownsamplingImageProcessor(size: cell.photoImageView.bounds.size)
+                         |> RoundCornerImageProcessor(cornerRadius: 10)
+            cell.photoImageView.kf.indicatorType = .activity
+            cell.photoImageView.kf.setImage(
+                with: photoUrl,
+                options: [
+                    .processor(processor),
+                    .scaleFactor(UIScreen.main.scale),
+                    .transition(.fade(1)),
+                    .cacheOriginalImage
             ])
-        cell.usernameLabel.text = model.username
-        
+            cell.usernameLabel.text = model.username
+        }
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let viewController = PhotoDetailVC()
-        
         let favPhoto = favoritePhotos[indexPath.row]
         let photoUrls = Urls(regular: favPhoto.regularUrl, small: favPhoto.smallUrl)
         let photoUser = User(username: favPhoto.username, location: favPhoto.location)
@@ -82,8 +77,7 @@ final class FavoritePhotoVC: UITableViewController {
                           urls: photoUrls,
                           likes: favPhoto.likes,
                           user: photoUser)
-        viewController.photo = photo
-        
+        let viewController = PhotoDetailVC(photo)
         navigationController?.pushViewController(viewController, animated: true)
         tableView.deselectRow(at: indexPath, animated: true)
     }

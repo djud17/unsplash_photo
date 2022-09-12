@@ -9,5 +9,7 @@ target 'unsplash_photo' do
 pod 'Alamofire'
 pod 'Kingfisher'
 pod 'RealmSwift'
+pod 'SwiftLint'
+pod 'SnapKit'
 
 end

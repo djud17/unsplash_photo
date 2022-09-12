@@ -6,18 +6,17 @@
 //
 
 import UIKit
+import Kingfisher
+import SnapKit
 
-final class CollectionPhotoVC: UIViewController, UITextFieldDelegate {
-    private var searchPhotoTextField: UITextField!
-    private var searchPhotoBtn: UIButton!
-    private var searchRequestLabel: UILabel!
+final class CollectionPhotoVC: UIViewController {
+    private var searchPhotoTextField = UITextField()
+    private var searchPhotoBtn = UIButton()
+    private var searchRequestLabel = UILabel()
     private var photoCV: UICollectionView!
-    private var errorLabel: UILabel!
-    
+    private var errorLabel = UILabel()
     private let apiClient: ApiClient = ApiClientImpl()
-    var photosArr: [Photo] = []
-    
-    private lazy var margins = self.view.layoutMarginsGuide
+    private var photosArr: [Photo] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,10 +27,8 @@ final class CollectionPhotoVC: UIViewController, UITextFieldDelegate {
     
     private func setupView() {
         view.backgroundColor = .white
-        
         navigationItem.title = "Photos"
         navigationController?.navigationBar.prefersLargeTitles = true
-        
         getTextField()
         getSearchBtn()
         getSearchRequestLabel()
@@ -41,11 +38,9 @@ final class CollectionPhotoVC: UIViewController, UITextFieldDelegate {
     
     @objc private func searchPhotoBtnTapped(_ sender: Any) {
         let searchWord = searchPhotoTextField.text ?? ""
-        
         if searchWord != "" {
             searchRequestLabel.text = "Photos for request: \(searchWord)"
             searchRequestLabel.isHidden = false
-            
             apiClient.getSearchPhoto(searchWord) { result in
                 DispatchQueue.main.async {
                     switch result {
@@ -81,59 +76,49 @@ final class CollectionPhotoVC: UIViewController, UITextFieldDelegate {
     }
     
     private func getTextField() {
-        searchPhotoTextField = UITextField(frame: CGRect(x: 10, y: 10, width: 300, height: 40))
         searchPhotoTextField.borderStyle = .roundedRect
         searchPhotoTextField.placeholder = "Type keyword to find photos"
         searchPhotoTextField.delegate = self
-        
         view.addSubview(searchPhotoTextField)
         
-        searchPhotoTextField.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            searchPhotoTextField.topAnchor.constraint(equalTo: margins.topAnchor, constant: 20),
-            searchPhotoTextField.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
-            searchPhotoTextField.heightAnchor.constraint(equalToConstant: 40),
-        ])
+        searchPhotoTextField.snp.makeConstraints { make in
+            make.topMargin.equalTo(20)
+            make.leftMargin.equalToSuperview()
+            make.height.equalTo(40)
+        }
     }
     
     private func getSearchBtn() {
-        searchPhotoBtn = UIButton(frame: CGRect(x: 10, y: 10, width: 80, height: 40))
-        searchPhotoBtn.setTitle("Search", for: .normal)
         searchPhotoBtn.addTarget(self, action: #selector(searchPhotoBtnTapped), for: .touchUpInside)
-        
         searchPhotoBtn.layer.borderColor = UIColor.black.cgColor
         searchPhotoBtn.layer.borderWidth = 0.5
         searchPhotoBtn.layer.backgroundColor = UIColor.white.cgColor
         searchPhotoBtn.layer.cornerRadius = 5
+        searchPhotoBtn.setTitle("Search", for: .normal)
         searchPhotoBtn.setTitleColor(.black, for: .normal)
         searchPhotoBtn.setTitleColor(.lightGray, for: .highlighted)
-        
         view.addSubview(searchPhotoBtn)
-        
-        searchPhotoBtn.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            searchPhotoBtn.topAnchor.constraint(equalTo: searchPhotoTextField.topAnchor),
-            searchPhotoBtn.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
-            searchPhotoBtn.widthAnchor.constraint(equalToConstant: 80),
-            searchPhotoBtn.heightAnchor.constraint(equalTo: searchPhotoTextField.heightAnchor),
-            searchPhotoBtn.leadingAnchor.constraint(equalTo: searchPhotoTextField.trailingAnchor, constant: 20)
-        ])
+ 
+        searchPhotoBtn.snp.makeConstraints { make in
+            make.top.equalTo(searchPhotoTextField.snp.top)
+            make.rightMargin.equalToSuperview()
+            make.width.equalTo(80)
+            make.height.equalTo(searchPhotoTextField.snp.height)
+            make.leading.equalTo(searchPhotoTextField.snp.trailing).offset(20)
+        }
     }
     
     private func getSearchRequestLabel() {
-        searchRequestLabel = UILabel(frame: CGRect(x: 10, y: 10, width: 200, height: 40))
         searchRequestLabel.textAlignment = .center
-        searchRequestLabel.font = UIFont.boldSystemFont(ofSize: 20)
-        searchRequestLabel.translatesAutoresizingMaskIntoConstraints = false
+        searchRequestLabel.font = .boldSystemFont(ofSize: 20)
         searchRequestLabel.isHidden = true
-        
         view.addSubview(searchRequestLabel)
         
-        NSLayoutConstraint.activate([
-            searchRequestLabel.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
-            searchRequestLabel.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
-            searchRequestLabel.topAnchor.constraint(equalTo: searchPhotoTextField.bottomAnchor, constant: 20)
-        ])
+        searchRequestLabel.snp.makeConstraints { make in
+            make.leftMargin.rightMargin.equalToSuperview()
+            make.top.equalTo(searchPhotoTextField.snp.bottom).offset(10)
+            make.height.equalTo(40)
+        }
     }
     
     private func getCollectionView() {
@@ -142,38 +127,76 @@ final class CollectionPhotoVC: UIViewController, UITextFieldDelegate {
         layout.itemSize = CGSize(width: 100, height: 150)
         layout.scrollDirection = .vertical
         
-        photoCV = UICollectionView(frame: CGRect(x: 10, y: 10, width: view.frame.width - 20, height: 500), collectionViewLayout: layout)
-        photoCV.alwaysBounceVertical = true
+        photoCV = UICollectionView(frame: CGRect(), collectionViewLayout: layout)
         photoCV.register(CustomCV.self, forCellWithReuseIdentifier: "photoCell")
         photoCV.backgroundColor = .white
+        photoCV.alwaysBounceVertical = true
         photoCV.dataSource = self
         photoCV.delegate = self
-        photoCV.translatesAutoresizingMaskIntoConstraints = false
-
         view.addSubview(photoCV)
         
-        NSLayoutConstraint.activate([
-            photoCV.topAnchor.constraint(equalTo: searchRequestLabel.bottomAnchor, constant: 20),
-            photoCV.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
-            photoCV.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
-            photoCV.bottomAnchor.constraint(equalTo: margins.bottomAnchor)
-        ])
+        photoCV.snp.makeConstraints { make in
+            make.top.equalTo(searchRequestLabel.snp.bottom).offset(10)
+            make.leftMargin.rightMargin.equalToSuperview()
+            make.bottomMargin.equalToSuperview().offset(-20)
+        }
     }
     
     private func getErrorLabel() {
-        errorLabel = UILabel(frame: CGRect(x: 10, y: 10, width: 200, height: 40))
         errorLabel.textAlignment = .center
-        errorLabel.font = UIFont.systemFont(ofSize: 16)
+        errorLabel.font = .systemFont(ofSize: 16)
         errorLabel.textColor = .red
         errorLabel.text = "Data error"
-        errorLabel.translatesAutoresizingMaskIntoConstraints = false
         errorLabel.isHidden = true
-        
         view.addSubview(errorLabel)
         
-        NSLayoutConstraint.activate([
-            errorLabel.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            errorLabel.centerYAnchor.constraint(equalTo: self.view.centerYAnchor)
-        ])
+        errorLabel.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.height.equalTo(40)
+        }
+    }
+}
+
+extension CollectionPhotoVC: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return photosArr.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "photoCell", for: indexPath)
+        if let cell = cell as? CustomCV {
+            let model = photosArr[indexPath.row]
+            let photoUrl = URL(string: model.urls.small)
+            let processor = DownsamplingImageProcessor(size: cell.photoImageView.bounds.size)
+                         |> RoundCornerImageProcessor(cornerRadius: 10)
+            cell.photoImageView.kf.indicatorType = .activity
+            cell.photoImageView.kf.setImage(
+                with: photoUrl,
+                options: [
+                    .processor(processor),
+                    .scaleFactor(UIScreen.main.scale),
+                    .transition(.fade(1)),
+                    .cacheOriginalImage
+                ])
+            cell.userLabel.text = model.user.username
+        }
+        return cell
+    }
+}
+
+extension CollectionPhotoVC: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let photo = photosArr[indexPath.row]
+        let viewController = PhotoDetailVC(photo)
+        navigationController?.pushViewController(viewController, animated: true)
+        collectionView.deselectItem(at: indexPath, animated: true)
+    }
+}
+
+extension CollectionPhotoVC: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        searchPhotoBtnTapped(self)
+        textField.resignFirstResponder()
+        return true
     }
 }

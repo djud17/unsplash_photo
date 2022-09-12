@@ -19,7 +19,6 @@
 		25A087542823D56D00A0AF50 /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25A087532823D56D00A0AF50 /* Photo.swift */; };
 		25A087562823D57700A0AF50 /* ApiClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25A087552823D57700A0AF50 /* ApiClient.swift */; };
 		25A087582823D58200A0AF50 /* Persistance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25A087572823D58200A0AF50 /* Persistance.swift */; };
-		25A0875A2823D59000A0AF50 /* CollectionPhotoExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25A087592823D59000A0AF50 /* CollectionPhotoExt.swift */; };
 		6DEA33111C37BFA2B271C78D /* Pods_unsplash_photo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6A9C4D2A3FB513B46DDB8A5 /* Pods_unsplash_photo.framework */; };
 /* End PBXBuildFile section */
 
@@ -39,7 +38,6 @@
 		25A087532823D56D00A0AF50 /* Photo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Photo.swift; sourceTree = "<group>"; };
 		25A087552823D57700A0AF50 /* ApiClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiClient.swift; sourceTree = "<group>"; };
 		25A087572823D58200A0AF50 /* Persistance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistance.swift; sourceTree = "<group>"; };
-		25A087592823D59000A0AF50 /* CollectionPhotoExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionPhotoExt.swift; sourceTree = "<group>"; };
 		52A8D10D255EC2C89CB6DE87 /* Pods-unsplash_photo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-unsplash_photo.debug.xcconfig"; path = "Target Support Files/Pods-unsplash_photo/Pods-unsplash_photo.debug.xcconfig"; sourceTree = "<group>"; };
 		E6A9C4D2A3FB513B46DDB8A5 /* Pods_unsplash_photo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_unsplash_photo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -77,7 +75,6 @@
 		25A087312823D46B00A0AF50 /* unsplash_photo */ = {
 			isa = PBXGroup;
 			children = (
-				25A087472823D47B00A0AF50 /* Extensions */,
 				25A087462823D47300A0AF50 /* Services */,
 				25A087482823D48600A0AF50 /* Model */,
 				25A087492823D48D00A0AF50 /* View */,
@@ -99,14 +96,6 @@
 				25A087572823D58200A0AF50 /* Persistance.swift */,
 			);
 			path = Services;
-			sourceTree = "<group>";
-		};
-		25A087472823D47B00A0AF50 /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
-				25A087592823D59000A0AF50 /* CollectionPhotoExt.swift */,
-			);
-			path = Extensions;
 			sourceTree = "<group>";
 		};
 		25A087482823D48600A0AF50 /* Model */ = {
@@ -159,6 +148,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 25A087432823D46C00A0AF50 /* Build configuration list for PBXNativeTarget "unsplash_photo" */;
 			buildPhases = (
+				25358B8B28CF3BB700C3E12C /* ShellScript */,
 				89C087BDD899CB61CF34B721 /* [CP] Check Pods Manifest.lock */,
 				25A0872B2823D46B00A0AF50 /* Sources */,
 				25A0872C2823D46B00A0AF50 /* Frameworks */,
@@ -221,6 +211,23 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		25358B8B28CF3BB700C3E12C /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/SwiftLint/swiftlint\"\n";
+		};
 		89C087BDD899CB61CF34B721 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -271,7 +278,6 @@
 				25A087562823D57700A0AF50 /* ApiClient.swift in Sources */,
 				25A087582823D58200A0AF50 /* Persistance.swift in Sources */,
 				25A0874C2823D53600A0AF50 /* CollectionPhotoVC.swift in Sources */,
-				25A0875A2823D59000A0AF50 /* CollectionPhotoExt.swift in Sources */,
 				25A087522823D56500A0AF50 /* CustomViews.swift in Sources */,
 				25A0874E2823D54500A0AF50 /* PhotoDetailVC.swift in Sources */,
 				25A087502823D55800A0AF50 /* FavoritePhotoVC.swift in Sources */,

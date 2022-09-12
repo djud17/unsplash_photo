@@ -7,41 +7,43 @@
 
 import UIKit
 import Kingfisher
+import SnapKit
 
 final class PhotoDetailVC: UIViewController {
-    private var photoImageView: UIImageView!
-    private var photoUsernameLabel: UILabel!
-    private var numLikesLabel: UILabel!
-    private var createdLabel: UILabel!
-    private var locationLabel: UILabel!
-    private var addToFavBtn: UIButton!
-    
-    var photo: Photo?
+    private var photo: Photo
+    private var photoImageView = UIImageView()
+    private var photoUsernameLabel = UILabel()
+    private var numLikesLabel = UILabel()
+    private var createdLabel = UILabel()
+    private var locationLabel = UILabel()
+    private var addToFavBtn = UIButton()
     private var favPhotos: [FavoritePhoto] = []
     private var addedFav = false
     
-    private lazy var margins = self.view.layoutMarginsGuide
+    required init(_ photoDetail: Photo) {
+        photo = photoDetail
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = .white
-        
         getPhotoImageView()
         getTitleLabels()
-        createFavButton(underView: locationLabel)
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        guard let photo = photo else { return }
-        
         loadImage(photo)
         setPhotoData(photo)
     }
     
     @objc private func addToFavBtnTapped(_ sender: UIButton) {
-        guard let photo = photo else { return }
-        
+        print("dd")
         if addedFav {
             deleteRealmPhoto(photo)
             addedFav = false
@@ -58,7 +60,6 @@ final class PhotoDetailVC: UIViewController {
     private func loadImage(_ photo: Photo) {
         let photoUrl = URL(string: photo.urls.regular)
         let processor = DownsamplingImageProcessor(size: photoImageView.bounds.size)
-        
         photoImageView.kf.indicatorType = .activity
         photoImageView.kf.setImage(
             with: photoUrl,
@@ -67,7 +68,7 @@ final class PhotoDetailVC: UIViewController {
                 .scaleFactor(UIScreen.main.scale),
                 .transition(.fade(1)),
                 .cacheOriginalImage
-            ])
+        ])
     }
     
     private func setPhotoData(_ photo: Photo) {
@@ -75,7 +76,6 @@ final class PhotoDetailVC: UIViewController {
         numLikesLabel.text = "\(photo.likes) Likes"
         createdLabel.text = parseDate(photo.createdAt)
         locationLabel.text = photo.user.location
-        
         if checkFav() {
             setBtnAdded()
         } else {
@@ -103,14 +103,14 @@ final class PhotoDetailVC: UIViewController {
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         let date = dateFormatter.date(from: createdDate)!
         let components = Calendar.current.dateComponents([.year, .month, .day, .hour], from: date)
-        return "\(components.day ?? 0)-\(components.month ?? 0)-\(components.year ?? 0)"
+        let dateStr = "\(components.day ?? 0)-\(components.month ?? 0)-\(components.year ?? 0)"
+        return dateStr
     }
     
     // Check Photo in Favorites
     private func checkFav() -> Bool {
         addedFav = false
-        if let favPhotos = Persistance.shared.realmRead(),
-            let photo = photo {
+        if let favPhotos = Persistance.shared.realmRead() {
             for fvPh in favPhotos where fvPh.id == photo.id {
                 addedFav = true
                 break
@@ -128,7 +128,6 @@ final class PhotoDetailVC: UIViewController {
         newPhoto.smallUrl = photo.urls.small
         newPhoto.username = photo.user.username
         newPhoto.location = photo.user.location ?? ""
-        
         Persistance.shared.realmWrite(newPhoto)
     }
     
@@ -142,26 +141,24 @@ final class PhotoDetailVC: UIViewController {
     }
     
     private func showAlert(_ message: String) {
-        let alert = UIAlertController(title: "Attention", message: "This photo was  \(message) Favorites.", preferredStyle: .alert)
+        let alertMessage = "This photo was  \(message) Favorites."
+        let alert = UIAlertController(title: "Attention", message: alertMessage, preferredStyle: .alert)
         let okBtn = UIAlertAction(title: "OK", style: .default)
         alert.addAction(okBtn)
-        
         present(alert, animated: true)
     }
     
     private func getPhotoImageView() {
-        photoImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width - 20, height: 312))
+        let imageWidth = view.frame.width - 20
+        photoImageView = UIImageView()
+        photoImageView.frame.size = CGSize(width: imageWidth, height: 350)
         photoImageView.backgroundColor = .white
-        photoImageView.translatesAutoresizingMaskIntoConstraints = false
-        
         view.addSubview(photoImageView)
-
-        NSLayoutConstraint.activate([
-            photoImageView.topAnchor.constraint(equalTo: margins.topAnchor),
-            photoImageView.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
-            photoImageView.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
-            photoImageView.heightAnchor.constraint(equalToConstant: 312)
-        ])
+        photoImageView.snp.makeConstraints { make in
+            make.topMargin.equalToSuperview().offset(10)
+            make.leftMargin.rightMargin.equalToSuperview()
+            make.height.equalTo(350)
+        }
     }
     
     private func getTitleLabels() {
@@ -184,6 +181,8 @@ final class PhotoDetailVC: UIViewController {
         
         locationLabel = createTitleLabel(withFont: .systemFont(ofSize: 16), withAlign: .right)
         setRightLabelConstraints(forLabel: locationLabel, underView: photoUsernameLabel)
+        
+        createFavButton(underView: locationTitleLabel)
     }
     
     private func createTitleLabel(withFont font: UIFont, withAlign align: NSTextAlignment) -> UILabel {
@@ -191,44 +190,33 @@ final class PhotoDetailVC: UIViewController {
         label.textColor = .black
         label.font = font
         label.textAlignment = align
-        
-        self.view.addSubview(label)
-        
+        view.addSubview(label)
         return label
     }
     
-    private func setLeftLabelConstraints(forLabel label: UILabel, underView view: UIView) {
-        label.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            label.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
-            label.topAnchor.constraint(equalTo: view.bottomAnchor, constant: 20)
-        ])
+    private func setLeftLabelConstraints(forLabel label: UILabel, underView uView: UIView) {
+        label.snp.makeConstraints { make in
+            make.leftMargin.equalToSuperview()
+            make.top.equalTo(uView.snp.bottom).offset(20)
+        }
     }
     
-    private func setRightLabelConstraints(forLabel label: UILabel, underView view: UIView) {
-        label.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            label.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
-            label.topAnchor.constraint(equalTo: view.bottomAnchor, constant: 20)
-        ])
+    private func setRightLabelConstraints(forLabel label: UILabel, underView uView: UIView) {
+        label.snp.makeConstraints { make in
+            make.rightMargin.equalToSuperview()
+            make.top.equalTo(uView.snp.bottom).offset(20)
+        }
     }
 
-    private func createFavButton(underView view: UIView) {
-        addToFavBtn = UIButton(frame: CGRect(x: 10, y: 10, width: 80, height: 40))
+    private func createFavButton(underView uView: UIView) {
         addToFavBtn.addTarget(self, action: #selector(addToFavBtnTapped), for: .touchUpInside)
         addToFavBtn.layer.borderColor = UIColor.blue.cgColor
         addToFavBtn.layer.borderWidth = 1.0
         setBtnDefault()
-        addToFavBtn.translatesAutoresizingMaskIntoConstraints = false
-        
-        self.view.addSubview(addToFavBtn)
-        
-        NSLayoutConstraint.activate([
-            addToFavBtn.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
-            addToFavBtn.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
-            addToFavBtn.topAnchor.constraint(equalTo: view.bottomAnchor, constant: 20)
-        ])
+        view.addSubview(addToFavBtn)
+        addToFavBtn.snp.makeConstraints { make in
+            make.trailingMargin.leadingMargin.equalToSuperview()
+            make.top.equalTo(uView.snp.bottom).offset(20)
+        }
     }
 }

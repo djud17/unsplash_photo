@@ -32,11 +32,9 @@ final class ApiClientImpl: ApiClient {
     
     func getRandomPhoto(completion: @escaping (Result<[Photo], Error>) -> Void) {
         let apiUrl = URL(string: "\(unsplashUrl)\(randomPhotoUrl)\(accessKey)\(photoCounter)")!
-        
         AF.request(apiUrl).responseData { response in
             if let data = response.value {
                 let randomPhotos: [Photo]? = try? JSONDecoder().decode([Photo].self, from: data)
-                
                 if let randomPhotos = randomPhotos {
                     if response.response?.statusCode == 200 {
                         completion(.success(randomPhotos))
@@ -51,13 +49,12 @@ final class ApiClientImpl: ApiClient {
     }
 
     func getSearchPhoto(_ searchWord: String, completion: @escaping (Result<SearchPhoto, Error>) -> Void) {
-        let strUrl = "\(unsplashUrl)\(searchPhotoUrl)\(accessKey)\(searchRequest)\(searchWord)".addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlQueryAllowed)!
-        let apiUrl = URL(string: strUrl)!
-        
+        let strUrl = "\(unsplashUrl)\(searchPhotoUrl)\(accessKey)\(searchRequest)\(searchWord)"
+        let strUrlFormatted = strUrl.addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlQueryAllowed)!
+        let apiUrl = URL(string: strUrlFormatted)!
         AF.request(apiUrl).responseData { response in
             if let data = response.value {
                 let searchPhotos: SearchPhoto? = try? JSONDecoder().decode(SearchPhoto.self, from: data)
-                
                 if let searchPhotos = searchPhotos {
                     if response.response?.statusCode == 200 {
                         completion(.success(searchPhotos))

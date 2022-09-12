@@ -6,30 +6,30 @@
 //
 
 import UIKit
+import SnapKit
 
 final class CustomCV: UICollectionViewCell {
     let photoImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.backgroundColor = .white
-        imageView.frame = CGRect(x: 0, y: 0, width: 128, height: 130)
-        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.frame.size = CGSize(width: 128, height: 130)
         return imageView
     }()
     
     let userLabel: UILabel = {
         let label = UILabel()
         label.textColor = .black
-        label.font = UIFont.systemFont(ofSize: 14)
+        label.font = .systemFont(ofSize: 12)
         label.textAlignment = .center
-        label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 0
         return label
     }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        self.addSubview(photoImageView)
-        self.addSubview(userLabel)
+        addSubview(photoImageView)
+        addSubview(userLabel)
         setupConstraints()
     }
     
@@ -38,15 +38,14 @@ final class CustomCV: UICollectionViewCell {
     }
     
     private func setupConstraints() {
-        NSLayoutConstraint.activate([
-            photoImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            photoImageView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            photoImageView.topAnchor.constraint(equalTo: self.topAnchor),
-            photoImageView.widthAnchor.constraint(equalToConstant: 128),
-            userLabel.topAnchor.constraint(equalTo: photoImageView.bottomAnchor, constant: 5),
-            userLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10),
-            userLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 10)
-        ])
+        photoImageView.snp.makeConstraints { make in
+            make.leading.trailing.top.equalToSuperview()
+        }
+        
+        userLabel.snp.makeConstraints { make in
+            make.top.equalTo(photoImageView.snp.bottom).offset(5)
+            make.leftMargin.rightMargin.equalToSuperview()
+        }
     }
 }
 
@@ -54,25 +53,23 @@ final class CustomCell: UITableViewCell {
     let photoImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.backgroundColor = .white
-        imageView.frame = CGRect(x: 0, y: 0, width: 70, height: 70)
-        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.frame.size = CGSize(width: 70, height: 70)
         return imageView
     }()
     
     let usernameLabel: UILabel = {
         let label = UILabel()
         label.textColor = .black
-        label.font = UIFont.systemFont(ofSize: 18)
+        label.font = .systemFont(ofSize: 18)
         label.textAlignment = .center
-        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        self.addSubview(photoImageView)
-        self.addSubview(usernameLabel)
+        addSubview(photoImageView)
+        addSubview(usernameLabel)
         setupConstraints()
     }
     
@@ -81,18 +78,18 @@ final class CustomCell: UITableViewCell {
     }
     
     private func setupConstraints() {
-        let margins = self.layoutMarginsGuide
+        photoImageView.snp.makeConstraints { make in
+            make.leftMargin.equalToSuperview()
+            make.top.equalToSuperview().offset(5)
+            make.bottom.equalToSuperview().offset(-5)
+            make.width.height.equalTo(70)
+        }
         
-        NSLayoutConstraint.activate([
-            photoImageView.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
-            photoImageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 5),
-            photoImageView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -5),
-            photoImageView.widthAnchor.constraint(equalToConstant: 70),
-            photoImageView.heightAnchor.constraint(equalToConstant: 70),
-            usernameLabel.topAnchor.constraint(equalTo: margins.topAnchor, constant: 5),
-            usernameLabel.bottomAnchor.constraint(equalTo: margins.bottomAnchor, constant: -5),
-            usernameLabel.leadingAnchor.constraint(equalTo: photoImageView.trailingAnchor, constant: 20),
-            usernameLabel.trailingAnchor.constraint(equalTo: margins.trailingAnchor)
-        ])
+        usernameLabel.snp.makeConstraints { make in
+            make.topMargin.equalToSuperview().offset(5)
+            make.bottomMargin.equalToSuperview().offset(-5)
+            make.leading.equalTo(photoImageView.snp.trailing).offset(20)
+            make.rightMargin.equalToSuperview()
+        }
     }
 }

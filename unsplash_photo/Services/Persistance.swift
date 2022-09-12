@@ -9,22 +9,24 @@ import RealmSwift
 
 final class Persistance {
     static let shared = Persistance()
-    let realm = try! Realm()
+    let realm = try? Realm()
     
     func realmWrite(_ photo: Any) {
-        try! realm.write{
-            realm.add(photo as! Object)
+        try? realm?.write {
+            if let photo = photo as? Object {
+                realm?.add(photo)
+            }
         }
     }
     
     func realmDelete(_ photo: FavoritePhoto) {
-        try! realm.write{
-            realm.delete(photo)
+        try? realm?.write {
+            realm?.delete(photo)
         }
     }
     
     func realmRead() -> Results<FavoritePhoto>? {
-        let array = realm.objects(FavoritePhoto.self)
+        let array = realm?.objects(FavoritePhoto.self)
         return array
     }
 }
