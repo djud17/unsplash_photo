@@ -100,10 +100,9 @@ final class CollectionPhotoVC: UIViewController {
         view.addSubview(searchPhotoBtn)
  
         searchPhotoBtn.snp.makeConstraints { make in
-            make.top.equalTo(searchPhotoTextField.snp.top)
+            make.top.height.equalTo(searchPhotoTextField)
             make.rightMargin.equalToSuperview()
             make.width.equalTo(80)
-            make.height.equalTo(searchPhotoTextField.snp.height)
             make.leading.equalTo(searchPhotoTextField.snp.trailing).offset(20)
         }
     }
@@ -138,7 +137,7 @@ final class CollectionPhotoVC: UIViewController {
         photoCV.snp.makeConstraints { make in
             make.top.equalTo(searchRequestLabel.snp.bottom).offset(10)
             make.leftMargin.rightMargin.equalToSuperview()
-            make.bottomMargin.equalToSuperview().offset(-20)
+            make.bottomMargin.equalToSuperview().inset(20)
         }
     }
     

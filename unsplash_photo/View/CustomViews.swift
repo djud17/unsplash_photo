@@ -81,14 +81,14 @@ final class CustomCell: UITableViewCell {
         photoImageView.snp.makeConstraints { make in
             make.leftMargin.equalToSuperview()
             make.top.equalToSuperview().offset(5)
-            make.bottom.equalToSuperview().offset(-5)
+            make.bottom.equalToSuperview().inset(5)
             make.width.height.equalTo(70)
         }
         
         usernameLabel.snp.makeConstraints { make in
             make.topMargin.equalToSuperview().offset(5)
-            make.bottomMargin.equalToSuperview().offset(-5)
-            make.leading.equalTo(photoImageView.snp.trailing).offset(20)
+            make.bottomMargin.equalToSuperview().inset(5)
+            make.leading.equalTo(photoImageView).offset(20)
             make.rightMargin.equalToSuperview()
         }
     }
