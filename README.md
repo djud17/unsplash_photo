@@ -12,6 +12,8 @@ You can:
 * JSON
 * Realm
 * Kingfisher
+* SwiftLint
+* SnapKit
 
 ## Screenshots
 ### Main tab with random photos
